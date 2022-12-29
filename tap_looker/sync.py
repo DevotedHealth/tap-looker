@@ -245,21 +245,23 @@ def sync_endpoint(client, #pylint: disable=too-many-branches
                     else:
                         for child in child_list:
                             if child != 'self':
-                                child_path = child_path.replace('[child_id]', str(child))
+                                child_path_replaced = child_path.replace('[child_id]', str(child))
+                            else:
+                                child_path_replaced = child_path
                             LOGGER.info('Syncing: %s, %s, parent_stream: %s, parent_id: %s',
                                         child_stream_name,
                                         child,
                                         stream_name,
                                         parent_id)
 
-                            LOGGER.info('%s, child_path: %s', child_stream_name, child_path)
+                            LOGGER.info('%s, child_path: %s', child_stream_name, child_path_replaced)
                             child_total_records = sync_endpoint(
                                 client=client,
                                 catalog=catalog,
                                 state=state,
                                 start_date=start_date,
                                 stream_name=child_stream_name,
-                                path=child_path,
+                                path=child_path_replaced,
                                 endpoint_config=child_endpoint_config,
                                 bookmark_field=child_endpoint_config.get('bookmark_field'),
                                 method=child_endpoint_config.get('method', 'GET'),
